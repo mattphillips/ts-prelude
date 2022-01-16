@@ -12,7 +12,10 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "skipLibCheck": true,
-    "strict": true
+    "strict": true,
+    "declaration": true,
+
+    "noEmit": true
   },
   "include": ["./src", "./test"]
 }

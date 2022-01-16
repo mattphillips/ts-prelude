@@ -14,7 +14,9 @@
   ],
   "files": [
     "src/**/*.js",
-    "README.md"
+    "src/**/*.d.ts",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "build": "tsc -p tsconfig-build.json",
