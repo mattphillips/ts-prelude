@@ -1,5 +1,7 @@
 # ts-prelude
 
+[![CI](https://github.com/mattphillips/ts-prelude/actions/workflows/all.yaml/badge.svg)](https://github.com/mattphillips/ts-prelude/actions/workflows/all.yaml)
+
 Currently a collection of functional datatypes that I use on every project and will eventually expand further into a standard lib of fp utils / algebraic-data-types.
 
 ADTs currently available:
