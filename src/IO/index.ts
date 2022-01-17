@@ -466,6 +466,13 @@ export const toUnit = <E, A>(io: IO<E, A>): IO<E, void> =>
   );
 
 /**
+  IO.**nothing** converts a successful IO to void and kills a failed IO
+
+  Syntaxical sugar for: `IO.toUnit.orDie`
+*/
+export const nothing = <E, A>(io: IO<E, A>): UIO<void> => pipe(io, toUnit, orDie);
+
+/**
   IO.**filter** interrogates the success channel with a given predicate which when fails converts the IO
   to an error with the given fallback
 */

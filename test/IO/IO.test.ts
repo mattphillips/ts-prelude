@@ -342,6 +342,15 @@ describe("IO", () => {
       );
     });
 
+    test(".nothing", () => {
+      expect.assertions(1);
+      pipe(
+        io,
+        IO.nothing,
+        expectSuccess((value) => expect(value).toEqual(undefined))
+      );
+    });
+
     test.todo(".delay");
   });
 
@@ -677,6 +686,15 @@ describe("IO", () => {
         io,
         IO.toUnit,
         expectError((value) => expect(value).toEqual(42))
+      );
+    });
+
+    test(".nothing", () => {
+      expect.assertions(1);
+      pipe(
+        io,
+        IO.nothing,
+        expectDie((value) => expect(value).toEqual(42))
       );
     });
 
