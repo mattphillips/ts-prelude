@@ -4,3 +4,4 @@ src/**/*.js
 test/**/*.js
 src/**/*.d.ts
 dist
+coverage
