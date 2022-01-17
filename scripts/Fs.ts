@@ -1,5 +1,4 @@
 import * as fs from "fs";
-import * as G from "glob";
 
 import { IO } from "../src/IO/fluent";
 
@@ -29,7 +28,9 @@ function ioify<E, A>(f: Function): () => IO<E, A> {
     });
   };
 }
+
+export const readFile = ioify<fs.PathLike, BufferEncoding, NodeJS.ErrnoException, string>(fs.readFile);
+export const writeFile = ioify<fs.PathLike, string, NodeJS.ErrnoException, void>(fs.writeFile);
 export const copyFile = ioify<fs.PathLike, fs.PathLike, NodeJS.ErrnoException, void>(fs.copyFile);
 export const mkdir = ioify<fs.PathLike, NodeJS.ErrnoException, void>(fs.mkdir);
 export const rmDir = ioify<fs.PathLike, fs.RmDirOptions, NodeJS.ErrnoException, void>(fs.rm);
-export const glob = ioify<string, Error, ReadonlyArray<string>>(G);

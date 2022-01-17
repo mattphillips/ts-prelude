@@ -13,7 +13,7 @@
     "data types"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig-build.json && yarn ts-node scripts/build.ts",
+    "build": "yarn ts-node scripts/build.ts",
     "typecheck": "tsc",
     "test": "jest"
   },
@@ -22,11 +22,9 @@
     "io-ts": "^2.2.16"
   },
   "devDependencies": {
-    "@types/glob": "^7.2.0",
     "@types/jest": "^27.4.0",
     "fast-check": "^2.21.0",
     "fp-ts": "^2.11.7",
-    "glob": "^7.2.0",
     "io-ts": "^2.2.16",
     "jest": "^27.4.7",
     "ts-jest": "^27.1.3",
