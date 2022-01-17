@@ -145,6 +145,35 @@ export const fromPromiseOrDie = <A>(lazy: () => Promise<A>): UIO<A> => pipe(from
 export const sleep = (duration: number): IO<never, void> => async((_, onSuccess) => setTimeout(onSuccess, duration));
 
 /**
+ **ioify** lifts a node style callback function to one returning an `IO`
+ */
+export function ioify<L, R>(f: (cb: (e: L | null | undefined, r?: R) => void) => void): () => IO<L, R>;
+export function ioify<A, L, R>(f: (a: A, cb: (e: L | null | undefined, r?: R) => void) => void): (a: A) => IO<L, R>;
+export function ioify<A, B, L, R>(
+  f: (a: A, b: B, cb: (e: L | null | undefined, r?: R) => void) => void
+): (a: A, b: B) => IO<L, R>;
+export function ioify<A, B, C, L, R>(
+  f: (a: A, b: B, c: C, cb: (e: L | null | undefined, r?: R) => void) => void
+): (a: A, b: B, c: C) => IO<L, R>;
+export function ioify<A, B, C, D, L, R>(
+  f: (a: A, b: B, c: C, d: D, cb: (e: L | null | undefined, r?: R) => void) => void
+): (a: A, b: B, c: C, d: D) => IO<L, R>;
+export function ioify<A, B, C, D, E, L, R>(
+  f: (a: A, b: B, c: C, d: D, e: E, cb: (e: L | null | undefined, r?: R) => void) => void
+): (a: A, b: B, c: C, d: D, e: E) => IO<L, R>;
+export function ioify<E, A>(f: Function): () => IO<E, A> {
+  return function () {
+    const args = Array.prototype.slice.call(arguments);
+    return async<E, A>((onE, onS) => {
+      const cbResolver = (e: E, r: A) => {
+        return e != null ? onE(e) : onS(r);
+      };
+      f.apply(null, args.concat(cbResolver));
+    });
+  };
+}
+
+/**
  **traverse** converts an Array<A> to an IO<E, Array<B>> where each element of the array is ran through the given `f`.
 
  It is useful when you have an array of items you want to run an effect on each item without ending up with an Array<IO<E, B>>,

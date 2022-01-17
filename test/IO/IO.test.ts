@@ -3,6 +3,10 @@ import * as IO from "src/IO";
 import { Maybe } from "src/Maybe";
 import { Result } from "src/Result";
 
+const nodeStyleCallbackSuccess = (args: 42, cb: (err: number | null, data?: number) => void) => {
+  cb(null, args);
+};
+
 describe("IO", () => {
   describe.each`
     title                             | io
@@ -16,6 +20,7 @@ describe("IO", () => {
     ${"TryCatch"}                     | ${IO.tryCatch(() => 42)}
     ${"fromPromise(Promise.resolve)"} | ${IO.fromPromise(() => Promise.resolve(42))}
     ${"fromPromiseOrDie"}             | ${IO.fromPromiseOrDie(() => Promise.resolve(42))}
+    ${"ioify"}                        | ${IO.ioify(nodeStyleCallbackSuccess)(42)}
   `("$title", ({ io }: { io: IO.IO<number, number> }) => {
     test(".unsafeRunAsync", () => {
       expect.assertions(1);
@@ -328,6 +333,13 @@ describe("IO", () => {
     test.todo(".delay");
   });
 
+  const throwsError = () => {
+    throw 42;
+  };
+  const nodeStyleCallbackFailure = (args: 42, cb: (err: number | null, data?: number) => void) => {
+    cb(args);
+  };
+
   describe.each`
     title                            | io
     ${"Fail"}                        | ${IO.fail(42)}
@@ -339,9 +351,8 @@ describe("IO", () => {
     ${"fromResult(Error(value))"}    | ${IO.fromResult(Result.error(42))}
     ${"Async.onFailure"}             | ${IO.async((onFailure) => onFailure(42))}
     ${"fromPromise(Promise.reject)"} | ${IO.fromPromise(() => Promise.reject(42))}
-    ${"TryCatch"} | ${IO.tryCatch(() => {
-  throw 42;
-})}
+    ${"TryCatch"}                    | ${IO.tryCatch(throwsError)}
+    ${"ioify"}                       | ${IO.ioify(nodeStyleCallbackFailure)(42)}
   `("$title", ({ io }: { io: IO.IO<number, number> }) => {
     test(".unsafeRunAsync", () => {
       expect.assertions(1);

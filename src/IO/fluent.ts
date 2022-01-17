@@ -57,6 +57,32 @@ export class IO<E, A> {
     <E, B>(f: (a: A) => IO<E, B>): IO<E, Array<B>> =>
       new IO<E, Array<B>>(_IO.forEach(args)((a) => f(a).value));
 
+  static ioify<L, R>(f: (cb: (e: L | null | undefined, r?: R) => void) => void): () => IO<L, R>;
+  static ioify<A, L, R>(f: (a: A, cb: (e: L | null | undefined, r?: R) => void) => void): (a: A) => IO<L, R>;
+  static ioify<A, B, L, R>(
+    f: (a: A, b: B, cb: (e: L | null | undefined, r?: R) => void) => void
+  ): (a: A, b: B) => IO<L, R>;
+  static ioify<A, B, C, L, R>(
+    f: (a: A, b: B, c: C, cb: (e: L | null | undefined, r?: R) => void) => void
+  ): (a: A, b: B, c: C) => IO<L, R>;
+  static ioify<A, B, C, D, L, R>(
+    f: (a: A, b: B, c: C, d: D, cb: (e: L | null | undefined, r?: R) => void) => void
+  ): (a: A, b: B, c: C, d: D) => IO<L, R>;
+  static ioify<A, B, C, D, E, L, R>(
+    f: (a: A, b: B, c: C, d: D, e: E, cb: (e: L | null | undefined, r?: R) => void) => void
+  ): (a: A, b: B, c: C, d: D, e: E) => IO<L, R>;
+  static ioify<E, A>(f: Function): () => IO<E, A> {
+    return function () {
+      const args = Array.prototype.slice.call(arguments);
+      return IO.async<E, A>((onE, onS) => {
+        const cbResolver = (e: E, r: A) => {
+          return e != null ? onE(e) : onS(r);
+        };
+        f.apply(null, args.concat(cbResolver));
+      });
+    };
+  }
+
   private constructor(private readonly value: _IO.IO<E, A>) {}
 
   private to_IO = <E1, A1>(f: (action: _IO.IO<E, A>) => _IO.IO<E1, A1>): IO<E1, A1> => new IO(f(this.value));
