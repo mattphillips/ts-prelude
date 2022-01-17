@@ -307,6 +307,18 @@ describe("IO", () => {
       );
     });
 
+    test(".fold", () => {
+      expect.assertions(1);
+      pipe(
+        io,
+        IO.fold(
+          () => -1,
+          (a) => a * 2
+        ),
+        expectSuccess((value) => expect(value).toEqual(84))
+      );
+    });
+
     test(".toPromise", () => {
       expect.assertions(1);
       return pipe(io, IO.toPromise, (p) => p.then((n) => expect(n).toBe(42)));
@@ -630,6 +642,18 @@ describe("IO", () => {
         io,
         IO.merge,
         expectSuccess((value) => expect(value).toEqual(42))
+      );
+    });
+
+    test(".fold", () => {
+      expect.assertions(1);
+      pipe(
+        io,
+        IO.fold(
+          (a) => a * 2,
+          () => -1
+        ),
+        expectSuccess((value) => expect(value).toEqual(84))
       );
     });
 

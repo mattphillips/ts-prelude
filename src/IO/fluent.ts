@@ -145,12 +145,11 @@ export class IO<E, A> {
 
   toUnit = (): IO<E, void> => this.to_IO(_IO.toUnit);
 
-  // TODO: investigate removing () syntax and add to underlying impl
   nothing = (): IO<never, void> => this.toUnit().orDie();
 
   merge = (): UIO<A | E> => this.to_IO(_IO.merge);
 
-  fold = <B>(f: (e: E) => B, g: (a: A) => B): UIO<B> => this.map(g).mapError(f).merge();
+  fold = <B>(f: (e: E) => B, g: (a: A) => B): UIO<B> => this.to_IO(_IO.fold(f, g));
 
   static do = <Eff extends _IO.GenIO<any, any>, AEff>(
     f: (i: <E, A>(_: IO<E, A>) => _IO.GenIO<E, A>) => Generator<Eff, AEff, any>

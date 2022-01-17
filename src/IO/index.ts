@@ -525,6 +525,15 @@ export const merge = <E, A>(io: IO<E, A>): UIO<A | E> =>
   );
 
 /**
+  IO.**fold** converts the IO to a UIO<B> that cannot fail by running the success and error channels over 
+  the given functions and merges the results
+*/
+export const fold =
+  <E, A, B>(f: (e: E) => B, g: (a: A) => B) =>
+  (io: IO<E, A>): UIO<B> =>
+    pipe(io, map(g), mapError(f), merge);
+
+/**
  **flip** Flips the values between the success and error channels.
  */
 export const flip = <E, A>(io: IO<E, A>): IO<A, E> => {
