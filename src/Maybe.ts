@@ -71,21 +71,20 @@ const tC = <A>(a: t.Type<A>): t.Type<t<A>> =>
 export type SerialiseableMaybe<A> = Serialisable<URI, t<A>>;
 export const serialisableMaybeC = <A>(a: t.Type<A>): t.Type<Serialisable<URI, t<A>>> => serialisableC(uriC, tC(a));
 
-// TODO: Tidy all of these codecs
 export const fromSerialisable = <A>(a: t.Type<A>): t.Type<Maybe<A>> =>
   new t.Type<Maybe<A>>(
     'Maybe',
     (input: unknown): input is Maybe<A> => serialisableMaybeC(a).is(input),
     (input, context) => {
-      const failure = t.failure<Maybe<A>>(input, context, `Input is not a Maybe`);
-      if (serialisableMaybeC(a).is(input)) {
-        if (input.value.tag === 'Just') {
-          return t.success(Maybe.just(input.value.value));
+      const outcome = serialisableMaybeC(a).validate(input, context);
+      if (outcome._tag === 'Right') {
+        if (outcome.right.value.tag === 'Just') {
+          return t.success(Maybe.just(outcome.right.value.value));
         } else {
           return t.success(Maybe.nothing);
         }
       } else {
-        return failure;
+        return outcome;
       }
     },
     t.identity
