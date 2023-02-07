@@ -67,8 +67,10 @@ const makeOf = <ADT extends TagUnion>(tags: TagTuple<Tags<ADT>>): Of<ADT> => {
   );
 };
 
+type Flatten<A> = { [K in keyof A]: A[K] } & {};
+
 export type TaggedUnion<A extends Record<string, {}>> = {
-  [Tag in keyof A]: { tag: Tag } & A[Tag];
+  [Tag in keyof A]: Flatten<{ tag: Tag } & A[Tag]>;
 }[keyof A];
 
 export const TaggedUnion = <ADT extends TagUnion>(tags: TagTuple<Tags<ADT>>): TaggedUnionUtils<ADT> => ({
