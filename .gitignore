@@ -5,3 +5,4 @@ test/**/*.js
 src/**/*.d.ts
 dist
 coverage
+.DS_Store
