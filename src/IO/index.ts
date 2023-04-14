@@ -190,7 +190,7 @@ export const traverse =
             pipe(
               a,
               f,
-              map((b) => bs.concat(b))
+              map((b) => bs.concat([b]))
             )
           )
         ),
@@ -215,7 +215,7 @@ export const forEach =
             pipe(
               a,
               f,
-              map((b) => bs.concat(b))
+              map((b) => bs.concat([b]))
             )
           )
         ),
